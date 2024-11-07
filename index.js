@@ -15,8 +15,18 @@ const io = new Server(httpServer, {
   }
 })
 
+io.on("connection", (socket) => {
+  socket.on("join_room_space", (data) => {
+    socket.join(data)
+  })
+
+  socket.on("send-user-message", (data) => {
+    io.to(data.room).emit('recieved-message', data.message)
+  })
+})
+
 const port = process.env.PORT;
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`server is running on port ${port}`)
 }) 
